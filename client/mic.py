@@ -8,7 +8,7 @@ from wave import open as open_audio
 import audioop
 import pyaudio
 import alteration
-
+from ATTEngine import ATTSpeech
 
 # quirky bug where first import doesn't work
 try:
@@ -21,6 +21,7 @@ class Mic:
 
     speechRec = None
     speechRec_persona = None
+    attEngine = None
 
     def __init__(self, speaker, lmd, dictd, lmd_persona, dictd_persona, lmd_music=None, dictd_music=None):
         """
@@ -41,6 +42,7 @@ class Mic:
         self.speechRec_persona = ps.Decoder(
             hmm=hmdir, lm=lmd_persona, dict=dictd_persona)
         self.speechRec = ps.Decoder(hmm=hmdir, lm=lmd, dict=dictd)
+ 	self.attEngine = ATTSpeech()
 
     def transcribe(self, audio_file_path, PERSONA_ONLY=False, MUSIC=False):
         """
@@ -62,10 +64,9 @@ class Mic:
             self.speechRec_persona.decode_raw(wavFile)
             result = self.speechRec_persona.get_hyp()
         else:
-            self.speechRec.decode_raw(wavFile)
-            result = self.speechRec.get_hyp()
-
-        print "==================="
+            result = self.attEngine.getResults(audio_file_path)
+	
+	print "==================="
         print "JASPER: " + result[0]
         print "==================="
 
