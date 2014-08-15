@@ -18,8 +18,11 @@ class eSpeakSpeaker:
         return os.system("which espeak") == 0
 
     def say(self, phrase, OPTIONS=" -vdefault+m3 -p 40 -s 160 --stdout > say.wav"):
-        os.system("espeak " + json.dumps(phrase) + OPTIONS)
-        self.play("say.wav")
+        #os.system("espeak " + json.dumps(phrase) + OPTIONS)
+        #self.play("say.wav")
+	os.system("../static/speech.sh "+ json.dumps(phrase))
+
+	
 
     def play(self, filename):
         os.system("aplay -D hw:1,0 " + filename)
@@ -40,6 +43,7 @@ class saySpeaker:
 
     def say(self, phrase):
         os.system("say " + self.shellquote(phrase))
+	#os.system("../static/speech.sh "+ self.shellquote(phrase))
 
     def play(self, filename):
         os.system("afplay " + filename)
